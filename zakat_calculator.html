@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zakat Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        // Set theme on initial load to prevent FOUC
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 transition-colors duration-300 flex flex-col min-h-screen">
+
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-2xl font-bold text-gray-900 dark:text-white">IslamicCalculations.io</a>
+            <div class="relative">
+                <button id="menu-toggle" class="text-gray-800 dark:text-white focus:outline-none p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+                <div id="nav-links" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 z-20 border dark:border-gray-700">
+                    <a href="./index.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Home</a>
+                    <a href="./zakat_calculator.html" class="block px-4 py-2 text-amber-600 dark:text-white font-semibold bg-gray-100 dark:bg-gray-700">Zakat</a>
+                    <a href="./salah_times_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Salah</a>
+                    <a href="./hijri_calendar.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Hijri Calendar</a>
+                    <a href="./faraid_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Inheritance</a>
+                    <a href="./abjad_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Abjad</a>
+                    <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                    <button id="theme-toggle" class="w-full text-left flex items-center justify-between px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <span>Toggle Theme</span>
+                        <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.706-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.95l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414-1.414zM2 11a1 1 0 100-2H1a1 1 0 100 2h1zM4.343 5.657a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-3xl mx-auto">
+            <div class="bg-white dark:glass-effect rounded-2xl shadow-2xl p-6 md:p-10 border dark:border-gray-800">
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white" style="font-family: 'Lora', serif;">Zakat Calculator</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Calculate your obligatory charity for the year.</p>
+                </div>
+
+                <form id="zakatForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div>
+                            <h2 class="text-2xl font-semibold text-amber-600 dark:text-yellow-400 mb-4">Assets (Zakatable)</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="cash" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cash, Bank Balance</label>
+                                    <input type="number" id="cash" class="mt-1 w-full bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg p-2 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 dark:focus:border-yellow-500 transition" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label for="goldSilver" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Value of Gold & Silver</label>
+                                    <input type="number" id="goldSilver" class="mt-1 w-full bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg p-2 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 dark:focus:border-yellow-500 transition" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label for="investments" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stocks, Investments</label>
+                                    <input type="number" id="investments" class="mt-1 w-full bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg p-2 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 dark:focus:border-yellow-500 transition" placeholder="0.00">
+                                </div>
+                                 <div>
+                                    <label for="businessAssets" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Inventory, Receivables</label>
+                                    <input type="number" id="businessAssets" class="mt-1 w-full bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg p-2 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 dark:focus:border-yellow-500 transition" placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-semibold text-amber-600 dark:text-yellow-400 mb-4">Deductions & Threshold</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="liabilities" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Short-Term Liabilities, Debts</label>
+                                    <input type="number" id="liabilities" class="mt-1 w-full bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg p-2 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 dark:focus:border-yellow-500 transition" placeholder="0.00">
+                                </div>
+                                <div class="pt-8">
+                                    <label for="nisab" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nisab Threshold</label>
+                                    <input type="number" id="nisab" class="mt-1 w-full bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg p-2 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 dark:focus:border-yellow-500 transition" placeholder="e.g., 5000">
+                                    <p class="text-xs text-gray-500 mt-1">The minimum wealth threshold. Check current value of 87.48g gold or 612.36g silver.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <button type="button" id="calculateBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white dark:bg-yellow-600 dark:hover:bg-yellow-500 dark:text-gray-900 font-bold py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 duration-300 shadow-lg">
+                            Calculate Zakat
+                        </button>
+                        <button type="button" id="clearBtn" class="w-full sm:w-auto bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                            Clear
+                        </button>
+                    </div>
+                </form>
+
+                <div id="resultSection" class="text-center mt-8 pt-6 border-t border-gray-300 dark:border-gray-700 hidden">
+                    <div id="zakatMessage" class="text-2xl font-semibold mb-4">&nbsp;</div>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg mb-2">Total Zakat Due</p>
+                    <h2 id="totalZakat" class="text-6xl font-bold text-amber-600 dark:text-yellow-400 tracking-wider">0.00</h2>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500 dark:text-gray-500">
+            <p>&copy; 2024 IslamicCalculations.io. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Dropdown menu toggle ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', (event) => {
+            navLinks.classList.toggle('hidden');
+            event.stopPropagation();
+        });
+        document.addEventListener('click', (event) => {
+            if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                navLinks.classList.add('hidden');
+            }
+        });
+
+        // --- Theme toggle ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+        const updateIcon = () => {
+            if (document.documentElement.classList.contains('dark')) {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        };
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            updateIcon();
+        });
+        updateIcon();
+
+        // --- Zakat Calculator Logic ---
+        const calculateBtn = document.getElementById('calculateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const resultSection = document.getElementById('resultSection');
+        const zakatForm = document.getElementById('zakatForm');
+        const cash = document.getElementById('cash');
+        const goldSilver = document.getElementById('goldSilver');
+        const investments = document.getElementById('investments');
+        const businessAssets = document.getElementById('businessAssets');
+        const liabilities = document.getElementById('liabilities');
+        const nisab = document.getElementById('nisab');
+        const zakatMessage = document.getElementById('zakatMessage');
+        const totalZakatEl = document.getElementById('totalZakat');
+        function calculateZakat() {
+            const totalAssets = (parseFloat(cash.value) || 0) + (parseFloat(goldSilver.value) || 0) + (parseFloat(investments.value) || 0) + (parseFloat(businessAssets.value) || 0);
+            const totalLiabilities = parseFloat(liabilities.value) || 0;
+            const nisabValue = parseFloat(nisab.value) || 0;
+            if (nisabValue <= 0) { alert("Please enter a valid Nisab threshold."); return; }
+            const netWealth = totalAssets - totalLiabilities;
+            let zakatAmount = 0;
+            if (netWealth >= nisabValue) {
+                zakatAmount = netWealth * 0.025;
+                zakatMessage.textContent = "Zakat is Obligatory";
+                zakatMessage.classList.remove('text-red-400');
+                zakatMessage.classList.add('text-green-400');
+            } else {
+                zakatMessage.textContent = "Your wealth is below the Nisab threshold.";
+                zakatMessage.classList.remove('text-green-400');
+                zakatMessage.classList.add('text-red-400');
+            }
+            totalZakatEl.textContent = zakatAmount.toFixed(2);
+            resultSection.classList.remove('hidden');
+        }
+        function clearForm() {
+            zakatForm.reset();
+            resultSection.classList.add('hidden');
+            zakatMessage.textContent = '';
+            totalZakatEl.textContent = '0.00';
+        }
+        calculateBtn.addEventListener('click', calculateZakat);
+        clearBtn.addEventListener('click', clearForm);
+    </script>
+</body>
+</html>

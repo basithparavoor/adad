@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faraid (Islamic Inheritance) Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .prose h2, .prose h3 {
+            font-family: 'Lora', serif;
+            color: #FBBF24;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 flex flex-col min-h-screen">
+
+    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-2xl font-bold text-white">IslamicCalculations.io</a>
+            
+            <div class="relative">
+                <button id="menu-toggle" class="text-white focus:outline-none p-2 rounded-md hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <div id="nav-links" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl py-2 z-20">
+                    <a href="./index.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Home</a>
+                    <a href="./zakat_calculator.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Zakat</a>
+                    <a href="./salah_times_calculator.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Salah</a>
+                    <a href="./hijri_calendar.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Hijri Calendar</a>
+                    <a href="./faraid_calculator.html" class="block px-4 py-2 text-white font-semibold hover:bg-gray-700 transition-colors">Inheritance</a>
+                    <a href="./abjad_calculator.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Abjad</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl mx-auto">
+            <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-10 text-center">
+                <div class="prose prose-invert max-w-none">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-2" style="font-family: 'Lora', serif;">Faraid (Islamic Inheritance) Guide</h1>
+                    <p class="text-gray-400">An educational guide and example of calculating shares in Miras.</p>
+
+                    <div class="bg-red-900/30 border border-red-700 text-red-300 px-4 py-3 rounded-lg relative my-8" role="alert">
+                        <strong class="font-bold">Important Disclaimer:</strong>
+                        <span class="block sm:inline"> Islamic inheritance law is highly complex. This tool is for educational purposes only and should not be used for actual estate distribution. Please consult a qualified Islamic scholar.</span>
+                    </div>
+                    
+                    <p class="text-gray-400 text-left">
+                        The Islamic law of inheritance, known as `ilm al-fara'id`, is a comprehensive and precise system outlined in the Qur'an to distribute a deceased person's estate justly among relatives. It is a core part of Islamic jurisprudence, ensuring that the wealth of a deceased Muslim is distributed according to divine guidance.
+                    </p>
+
+                    <h2 class="text-left mt-8">Distribution Principles</h2>
+                    <p class="text-left text-gray-400">
+                        The distribution of an estate is performed in a specific order:
+                        <ol class="list-decimal pl-6 text-left">
+                            <li>First, all funeral expenses and any outstanding debts are settled from the estate.</li>
+                            <li>Next, any bequests (wasiyah) are paid, provided they do not exceed one-third of the remaining estate.</li>
+                            <li>The rest of the estate is then divided among the legal heirs according to their specified shares.</li>
+                        </ol>
+                    </p>
+
+                    <h3 class="text-left mt-6">Types of Heirs</h3>
+                    <p class="text-left text-gray-400">
+                        Heirs are primarily divided into three categories based on their relationship to the deceased:
+                        <ul class="list-disc pl-6 text-left">
+                            <li><strong>Quota Heirs (`Ashab al-Faraid`):</strong> These relatives receive a fixed, specified fraction of the estate (e.g., 1/2, 1/4, 1/8, 1/6, 1/3, 2/3).</li>
+                            <li><strong>Residuaries (`Asabah`):</strong> These relatives take what is left of the estate after the Quota Heirs have received their shares. They are often the closest male relatives.</li>
+                            <li><strong>Distant Kindred (`Dhawi al-Arham`):</strong> These are other relatives who inherit only in the absence of Quota Heirs and Residuaries.</li>
+                        </ul>
+                    </p>
+                    
+                    <h2 class="text-left mt-8">Illustrative Example</h2>
+                    <p class="text-left text-gray-400">
+                        Below is a simple, educational example of how an estate would be divided. The rules become much more intricate with a greater number of heirs, including special cases like `Al-Awwal` and `Al-Radd`.
+                    </p>
+
+                    <div class="bg-gray-800/50 p-6 rounded-lg text-left mt-4">
+                        <h4 class="text-lg font-semibold text-white mb-2">Scenario:</h4>
+                        <p class="text-gray-300">A man passes away leaving behind a total estate of <strong class="text-yellow-400">$100,000</strong>. His surviving heirs are: a **Wife**, one **Son**, and one **Mother**.</p>
+                        
+                        <h4 class="text-lg font-semibold text-white mt-4 mb-2">Calculation:</h4>
+                        <ul class="list-disc pl-6 text-gray-300">
+                            <li><strong>Wife:</strong> She inherits the fixed share of one-eighth (1/8) due to the presence of a child.</li>
+                            <li><strong>Mother:</strong> She inherits the fixed share of one-sixth (1/6) due to the presence of a child.</li>
+                            <li><strong>Son:</strong> He is a Residuary and inherits the rest of the estate after the other fixed shares are paid.</li>
+                        </ul>
+
+                        <div class="mt-4 border-t border-gray-700 pt-4">
+                             <p class="text-lg font-semibold text-white mb-2">Shares:</p>
+                             <p class="text-gray-300">Wife's Share: 1/8 of $100,000 = <strong class="text-yellow-400">$12,500</strong></p>
+                             <p class="text-gray-300">Mother's Share: 1/6 of $100,000 = <strong class="text-yellow-400">$16,666.67</strong></p>
+                             <p class="text-gray-300 mt-2">Total Quota Shares: $12,500 + $16,666.67 = <strong class="text-yellow-400">$29,166.67</strong></p>
+                             <p class="text-gray-300 mt-2">Remaining Estate for Son: $100,000 - $29,166.67 = <strong class="text-yellow-400">$70,833.33</strong></p>
+                             <p class="text-gray-300 mt-2"><strong>Final Distribution:</strong></p>
+                             <p class="text-gray-300">Wife gets: <strong class="text-yellow-400">$12,500</strong></p>
+                             <p class="text-gray-300">Mother gets: <strong class="text-yellow-400">$16,666.67</strong></p>
+                             <p class="text-gray-300">Son gets: <strong class="text-yellow-400">$70,833.33</strong></p>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-400 mt-8 text-left">
+                        This is a simple case. For any real-life inheritance situation, it is crucial to seek advice from a qualified Islamic scholar or a lawyer specializing in Islamic law to ensure the distribution is performed correctly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 border-t border-gray-800">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500">
+            <p>&copy; 2024 IslamicCalculations.io. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dropdown menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', (event) => {
+            navLinks.classList.toggle('hidden');
+            event.stopPropagation();
+        });
+        document.addEventListener('click', (event) => {
+            if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                navLinks.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

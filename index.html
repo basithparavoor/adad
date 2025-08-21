@@ -1,254 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abjad Numerology Calculator</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Islamic Calculation Methods</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        // Set theme on initial load to prevent FOUC (Flash of Unstyled Content)
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <style>
-        /* Custom styles for a premium feel */
         body {
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        .prose h2, .prose h3 {
+            font-family: 'Lora', serif;
+            color: #D97706; /* amber-600 */
+        }
+        .dark .prose h2, .dark .prose h3 {
+             color: #FBBF24; /* amber-400 */
+        }
         .glass-effect {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        /* Custom scrollbar for the breakdown section */
-        #breakdownContainer::-webkit-scrollbar {
-            width: 8px;
-        }
-        #breakdownContainer::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-        #breakdownContainer::-webkit-scrollbar-thumb {
-            background: rgba(209, 173, 94, 0.6);
-            border-radius: 10px;
-        }
-        #breakdownContainer::-webkit-scrollbar-thumb:hover {
-            background: #D1AD5E;
-        }
-        /* Input field focus glow */
-        #textInput:focus {
-            box-shadow: 0 0 0 2px rgba(209, 173, 94, 0.5);
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 transition-colors duration-300">
 
-    <!-- Main container -->
-    <div class="w-full max-w-2xl mx-auto">
-        <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-10">
-
-            <!-- Header Section -->
-            <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold text-white">Abjad Calculator</h1>
-                <p class="text-gray-400 mt-2">Calculate the numerical value of words and phrases.</p>
-            </div>
-
-            <!-- Input Section -->
-            <div class="mb-6">
-                <label for="textInput" class="sr-only">Enter text</label>
-                <textarea id="textInput" rows="4" class="w-full bg-gray-800 border-2 border-gray-700 rounded-lg p-4 text-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-600 transition-all duration-300" placeholder="اكتب النص هنا..." dir="rtl"></textarea>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                <button id="calculateBtn" class="w-full bg-yellow-600 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 duration-300 shadow-lg">
-                    Calculate
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-2xl font-bold text-gray-900 dark:text-white">IslamicCalculations.io</a>
+            
+            <div class="relative">
+                <button id="menu-toggle" class="text-gray-800 dark:text-white focus:outline-none p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
                 </button>
-                <button id="clearBtn" class="w-full sm:w-auto bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
-                    Clear
-                </button>
-            </div>
 
-            <!-- Result Section -->
-            <div id="resultSection" class="text-center hidden">
-                <p class="text-gray-400 text-lg mb-2">Total Numerical Value</p>
-                <div class="relative inline-block">
-                    <h2 id="totalValue" class="text-6xl md:text-7xl font-bold text-yellow-400 tracking-wider">0</h2>
-                    <button id="copyBtn" class="absolute -top-2 -right-10 text-gray-500 hover:text-yellow-400 transition-colors duration-300" title="Copy to clipboard">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <div id="nav-links" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 z-20 border dark:border-gray-700">
+                    <a href="./index.html" class="block px-4 py-2 text-amber-600 dark:text-white font-semibold bg-gray-100 dark:bg-gray-700">Home</a>
+                    <a href="./zakat_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Zakat</a>
+                    <a href="./salah_times_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Salah</a>
+                    <a href="./hijri_calendar.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Hijri Calendar</a>
+                    <a href="./faraid_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Inheritance</a>
+                    <a href="./abjad_calculator.html" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">Abjad</a>
+                    <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                    <button id="theme-toggle" class="w-full text-left flex items-center justify-between px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <span>Toggle Theme</span>
+                        <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.706-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.95l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414-1.414zM2 11a1 1 0 100-2H1a1 1 0 100 2h1zM4.343 5.657a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
                     </button>
                 </div>
-                 <div id="copyFeedback" class="text-green-400 text-sm mt-2 opacity-0 transition-opacity duration-500">Copied!</div>
             </div>
-            
-            <!-- Breakdown Section -->
-            <div id="breakdownSection" class="mt-8 hidden">
-                 <h3 class="text-lg font-semibold text-white mb-3 text-center">Calculation Breakdown</h3>
-                 <div id="breakdownContainer" class="glass-effect rounded-lg p-4 max-h-48 overflow-y-auto">
-                    <!-- Breakdown details will be injected here -->
-                 </div>
-            </div>
+        </nav>
+    </header>
 
+    <main>
+        <section class="relative text-white text-center py-20 md:py-32 px-6 bg-cover bg-center" style="background-image: linear-gradient(rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.7)), url('https://source.unsplash.com/1600x900/?islamic,mosque');">
+            <div class="container mx-auto">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4" style="font-family: 'Lora', serif;">A Guide to Islamic Calculation Methods</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-200">Exploring the precise mathematical and astronomical principles guiding Islamic life, from daily prayers to financial duties.</p>
+            </div>
+        </section>
+
+        <section id="features" class="py-16 md:py-24">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2" style="font-family: 'Lora', serif;">Our Tools & Guides</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">From daily prayers to annual charity, our tools are designed to provide clarity and ease of use.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="./zakat_calculator.html" class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg dark:shadow-none hover:shadow-2xl dark:hover:bg-gray-800 transition-all duration-300 border dark:border-gray-700">
+                        <h3 class="text-xl font-bold text-amber-600 dark:text-yellow-400 mb-2">Zakat Calculator</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Calculate your annual obligatory charity with our easy-to-use tool.</p>
+                    </a>
+                    <a href="./salah_times_calculator.html" class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg dark:shadow-none hover:shadow-2xl dark:hover:bg-gray-800 transition-all duration-300 border dark:border-gray-700">
+                        <h3 class="text-xl font-bold text-amber-600 dark:text-yellow-400 mb-2">Salah Times</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Find accurate daily prayer times for your location.</p>
+                    </a>
+                    <a href="./faraid_calculator.html" class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg dark:shadow-none hover:shadow-2xl dark:hover:bg-gray-800 transition-all duration-300 border dark:border-gray-700">
+                        <h3 class="text-xl font-bold text-amber-600 dark:text-yellow-400 mb-2">Inheritance Guide</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Understand the complex and divine laws of Islamic inheritance.</p>
+                    </a>
+                    <a href="./abjad_calculator.html" class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg dark:shadow-none hover:shadow-2xl dark:hover:bg-gray-800 transition-all duration-300 border dark:border-gray-700">
+                        <h3 class="text-xl font-bold text-amber-600 dark:text-yellow-400 mb-2">Abjad Calculator</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Explore the numerological values of Arabic words and phrases.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-white dark:bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
+                     <p class="lead text-xl">
+                        Islamic life is guided by a framework of principles that often require specific calculations to ensure proper observance. These methods, rooted in the Qur'an and the Sunnah, range from daily astronomical computations to annual financial obligations and intricate inheritance laws.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gray-200 dark:bg-gray-800">
+            <div class="container mx-auto px-6 py-16 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Try Our Abjad Numerology Tool</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Calculate the numerical value of Arabic words and phrases with our easy-to-use, modern Abjad calculator.</p>
+                <a href="./abjad_calculator.html" class="bg-amber-500 hover:bg-amber-600 text-white dark:bg-yellow-600 dark:hover:bg-yellow-500 dark:text-gray-900 font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105 duration-300 shadow-lg inline-block">
+                    Launch Calculator
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500 dark:text-gray-500">
+            <p>&copy; 2024 IslamicCalculations.io. All Rights Reserved.</p>
         </div>
-    </div>
-
+    </footer>
+    
     <script>
-        // DOM element references
-        const textInput = document.getElementById('textInput');
-        const calculateBtn = document.getElementById('calculateBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const resultSection = document.getElementById('resultSection');
-        const totalValueEl = document.getElementById('totalValue');
-        const breakdownSection = document.getElementById('breakdownSection');
-        const breakdownContainer = document.getElementById('breakdownContainer');
-        const copyBtn = document.getElementById('copyBtn');
-        const copyFeedback = document.getElementById('copyFeedback');
-
-        // Abjad numerical values mapping
-        const abjadMap = {
-            'ا': 1, 'أ': 1, 'إ': 1, 'آ': 1,
-            'ب': 2,
-            'ج': 3,
-            'د': 4,
-            'ه': 5, 'ة': 5,
-            'و': 6,
-            'ز': 7,
-            'ح': 8,
-            'ط': 9,
-            'ي': 10, 'ى': 10,
-            'ك': 20,
-            'ل': 30,
-            'م': 40,
-            'ن': 50,
-            'س': 60,
-            'ع': 70,
-            'ف': 80,
-            'ص': 90,
-            'ق': 100,
-            'ر': 200,
-            'ش': 300,
-            'ت': 400,
-            'ث': 500,
-            'خ': 600,
-            'ذ': 700,
-            'ض': 800,
-            'ظ': 900,
-            'غ': 1000,
-            // Persian characters (optional, uncomment if needed)
-            // 'پ': 2,
-            // 'چ': 3,
-            // 'ژ': 7,
-            // 'گ': 20,
-        };
-
-        /**
-         * Calculates the Abjad value of a given text.
-         */
-        function calculateAbjad() {
-            const text = textInput.value;
-            if (!text.trim()) {
-                // Hide results if input is empty
-                resultSection.classList.add('hidden');
-                breakdownSection.classList.add('hidden');
-                return;
-            }
-
-            let total = 0;
-            let breakdownHTML = '<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 text-center">';
-
-            for (const char of text) {
-                const value = abjadMap[char];
-                if (value) {
-                    total += value;
-                    breakdownHTML += `
-                        <div class="bg-gray-800/50 p-2 rounded-md">
-                            <span class="font-mono text-lg text-yellow-400">${char}</span>
-                            <span class="text-xs text-gray-400 block">${value}</span>
-                        </div>
-                    `;
-                } else if (char.trim() !== '') { // Handle non-mapped, non-space characters
-                     breakdownHTML += `
-                        <div class="bg-gray-800/50 p-2 rounded-md opacity-50">
-                            <span class="font-mono text-lg text-gray-500">${char}</span>
-                            <span class="text-xs text-gray-500 block">0</span>
-                        </div>
-                    `;
-                }
-            }
-            breakdownHTML += '</div>';
-
-            // Display the results with a smooth animation
-            totalValueEl.textContent = total;
-            breakdownContainer.innerHTML = breakdownHTML;
-
-            resultSection.classList.remove('hidden');
-            breakdownSection.classList.remove('hidden');
-            
-            // Animate total value
-            totalValueEl.classList.remove('animate-pulse');
-            void totalValueEl.offsetWidth; // Trigger reflow
-            totalValueEl.classList.add('animate-pulse');
-            setTimeout(() => totalValueEl.classList.remove('animate-pulse'), 1000);
-        }
-
-        /**
-         * Clears the input and results.
-         */
-        function clearAll() {
-            textInput.value = '';
-            resultSection.classList.add('hidden');
-            breakdownSection.classList.add('hidden');
-            totalValueEl.textContent = '0';
-            breakdownContainer.innerHTML = '';
-            textInput.focus();
-        }
-
-        /**
-         * Copies the total value to the clipboard.
-         */
-        function copyToClipboard() {
-            const valueToCopy = totalValueEl.textContent;
-            
-            // A fallback for older browsers
-            const textArea = document.createElement("textarea");
-            textArea.value = valueToCopy;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showCopyFeedback();
-            } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
-            }
-            document.body.removeChild(textArea);
-        }
-        
-        /**
-         * Shows a "Copied!" message briefly.
-         */
-        function showCopyFeedback() {
-             copyFeedback.classList.remove('opacity-0');
-             setTimeout(() => {
-                copyFeedback.classList.add('opacity-0');
-             }, 2000);
-        }
-
-        // Event Listeners
-        calculateBtn.addEventListener('click', calculateAbjad);
-        clearBtn.addEventListener('click', clearAll);
-        copyBtn.addEventListener('click', copyToClipboard);
-        
-        // Allow calculation by pressing Enter (Shift+Enter for new line)
-        textInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); // Prevent new line
-                calculateAbjad();
+        // --- Dropdown menu toggle ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', (event) => {
+            navLinks.classList.toggle('hidden');
+            event.stopPropagation();
+        });
+        document.addEventListener('click', (event) => {
+            if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                navLinks.classList.add('hidden');
             }
         });
 
+        // --- Theme toggle ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+
+        const updateIcon = () => {
+            if (document.documentElement.classList.contains('dark')) {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        };
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            updateIcon();
+        });
+
+        // Set the initial icon state on page load
+        updateIcon();
     </script>
 </body>
 </html>

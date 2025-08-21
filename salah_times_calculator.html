@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salah Times Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%239CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 flex flex-col min-h-screen">
+
+    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-2xl font-bold text-white">IslamicCalculations.io</a>
+            
+            <div class="relative">
+                <button id="menu-toggle" class="text-white focus:outline-none p-2 rounded-md hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <div id="nav-links" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl py-2 z-20">
+                    <a href="./index.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Home</a>
+                    <a href="./zakat_calculator.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Zakat</a>
+                    <a href="./salah_times_calculator.html" class="block px-4 py-2 text-white font-semibold hover:bg-gray-700 transition-colors">Salah</a>
+                    <a href="./hijri_calendar.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Hijri Calendar</a>
+                    <a href="./inheritance_calculator.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Inheritance</a>
+                    <a href="./abjad_calculator.html" class="block px-4 py-2 text-gray-300 hover:text-yellow-400 hover:bg-gray-700 transition-colors">Abjad</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl mx-auto">
+            <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-10 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white" style="font-family: 'Lora', serif;">Salah Times</h1>
+                <p class="text-gray-400 mt-2 mb-8">Determine daily prayer times based on your location.</p>
+
+                <div id="alertBox" class="text-left bg-red-900/30 border border-red-700 text-red-300 px-4 py-3 rounded-lg relative mb-6 hidden" role="alert"></div>
+
+                <div class="space-y-4">
+                    <input type="text" id="cityInput" class="w-full bg-gray-800 border-2 border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500" placeholder="Enter City, Country">
+                    
+                    <div>
+                        <label for="madhab" class="sr-only">Asr Juristic Method</label>
+                        <select id="madhab" class="w-full bg-gray-800 border-2 border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
+                            <option value="1">Majority (Shafi'i, Maliki, Hanbali)</option>
+                            <option value="0">Hanafi</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                         <button id="getLocationBtn" class="w-full sm:w-auto bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">Use My Location</button>
+                        <button id="getTimesBtn" class="w-full bg-yellow-600 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">Get Prayer Times</button>
+                    </div>
+                </div>
+
+                <div id="results" class="mt-8 pt-6 border-t border-gray-700 hidden">
+                    <h2 class="text-2xl font-semibold text-yellow-400 mb-4">Prayer Times for <span id="locationName">[Location]</span></h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-lg">
+                        <div class="bg-gray-800/50 p-4 rounded-lg"><strong>Fajr:</strong> <span id="fajrTime">--:--</span></div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg"><strong>Sunrise:</strong> <span id="sunriseTime">--:--</span></div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg"><strong>Dhuhr:</strong> <span id="dhuhrTime">--:--</span></div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg"><strong>Asr:</strong> <span id="asrTime">--:--</span></div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg"><strong>Maghrib:</strong> <span id="maghribTime">--:--</span></div>
+                        <div class="bg-gray-800/50 p-4 rounded-lg"><strong>Isha:</strong> <span id="ishaTime">--:--</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 border-t border-gray-800">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500">
+            <p>&copy; 2024 IslamicCalculations.io. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dropdown menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', (event) => {
+            navLinks.classList.toggle('hidden');
+            event.stopPropagation();
+        });
+        document.addEventListener('click', (event) => {
+            if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                navLinks.classList.add('hidden');
+            }
+        });
+        
+        // Salah calculator logic
+        const cityInput = document.getElementById('cityInput');
+        const getTimesBtn = document.getElementById('getTimesBtn');
+        const getLocationBtn = document.getElementById('getLocationBtn');
+        const madhabSelect = document.getElementById('madhab');
+        const resultsDiv = document.getElementById('results');
+        const alertBox = document.getElementById('alertBox');
+
+        getTimesBtn.addEventListener('click', () => {
+            const city = cityInput.value.trim();
+            if (city) {
+                fetchPrayerTimesByCity(city);
+            } else {
+                showAlert("Please enter a city and country.");
+            }
+        });
+
+        getLocationBtn.addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    fetchPrayerTimesByCoords(latitude, longitude);
+                }, () => {
+                    showAlert("Unable to retrieve your location. Please enter a city manually.");
+                });
+            } else {
+                showAlert("Geolocation is not supported by your browser.");
+            }
+        });
+
+        function fetchPrayerTimesByCity(city) {
+            const madhab = madhabSelect.value;
+            const url = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=&method=2&school=${madhab}`;
+            fetchAndDisplayTimes(url, city);
+        }
+
+        function fetchPrayerTimesByCoords(lat, lon) {
+            const madhab = madhabSelect.value;
+            const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2&school=${madhab}`;
+            fetchAndDisplayTimes(url, `your location`);
+        }
+
+        async function fetchAndDisplayTimes(url, location) {
+            hideAlert();
+            getTimesBtn.textContent = 'Loading...';
+            getTimesBtn.disabled = true;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    const timings = data.data.timings;
+                    document.getElementById('fajrTime').textContent = formatTime(timings.Fajr);
+                    document.getElementById('sunriseTime').textContent = formatTime(timings.Sunrise);
+                    document.getElementById('dhuhrTime').textContent = formatTime(timings.Dhuhr);
+                    document.getElementById('asrTime').textContent = formatTime(timings.Asr);
+                    document.getElementById('maghribTime').textContent = formatTime(timings.Maghrib);
+                    document.getElementById('ishaTime').textContent = formatTime(timings.Isha);
+                    document.getElementById('locationName').textContent = cityInput.value || 'your location';
+                    resultsDiv.classList.remove('hidden');
+                } else {
+                    showAlert(data.data || 'Could not find prayer times for the specified location.');
+                }
+            } catch (error) {
+                showAlert('An error occurred while fetching prayer times. Please try again.');
+            } finally {
+                getTimesBtn.textContent = 'Get Prayer Times';
+                getTimesBtn.disabled = false;
+            }
+        }
+
+        function formatTime(time24) {
+            const [hour, minute] = time24.split(':');
+            const h = parseInt(hour, 10);
+            const period = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 || 12;
+            return `${h12}:${minute} ${period}`;
+        }
+
+        function showAlert(message) {
+            alertBox.textContent = message;
+            alertBox.classList.remove('hidden');
+        }
+
+        function hideAlert() {
+            alertBox.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
